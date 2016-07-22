@@ -12,11 +12,11 @@ func main() {
 	names := NewMemoryNames()
 	wiki := &Wiki{
 		Storage: storage,
-		Names: names,
+		Names:   names,
 	}
 	namesController := NewNamesController(names)
 
-	pages,err := NewPageController(wiki)
+	pages, err := NewPageController(wiki)
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -6,26 +6,26 @@ import (
 
 func TestParentMustExist(t *testing.T) {
 	wiki := &Wiki{
-    Storage: NewMemoryDocuments(),
-    Names: NewMemoryNames(),
-  }
+		Storage: NewMemoryDocuments(),
+		Names:   NewMemoryNames(),
+	}
 
 	a1 := wiki.Edit("NON_EXISTING_HASH010203", "content")
-  a2 := wiki.Get(a1.ID)
+	a2 := wiki.Get(a1.ID)
 
-  if len(a2.Content) > 0 {
-    t.Error("Error parent hash. Document cannot have unexisted parent hash.")
-  }
+	if len(a2.Content) > 0 {
+		t.Error("Error parent hash. Document cannot have unexisted parent hash.")
+	}
 }
 
 func TestForkChain(t *testing.T) {
 	contents := []string{"zero", "one", "two", "three"}
 
 	wiki := &Wiki{
-    Storage: NewMemoryDocuments(),
-    Names: NewMemoryNames(),
-  }
-	orig := wiki.Create("doc",contents[0])
+		Storage: NewMemoryDocuments(),
+		Names:   NewMemoryNames(),
+	}
+	orig := wiki.Create("doc", contents[0])
 
 	last := orig
 	for _, newContent := range contents[1:] {

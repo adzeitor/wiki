@@ -19,8 +19,8 @@ func (ds *MemoryDocuments) Add(doc Doc) error {
 	return nil
 }
 
-func (ds *MemoryDocuments) Get(id string) (Doc,bool) {
-	r,ok := ds.Items[id]
+func (ds *MemoryDocuments) Get(id string) (Doc, bool) {
+	r, ok := ds.Items[id]
 
-	return r,ok
+	return r, ok
 }

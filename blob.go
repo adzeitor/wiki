@@ -40,7 +40,7 @@ func (c *BlobController) Add(w http.ResponseWriter, r *http.Request) {
 	var doc Doc
 	if id == "" {
 		c.Storage.Add(Doc{
-			Content:string(body),
+			Content: string(body),
 		})
 	}
 
@@ -50,7 +50,7 @@ func (c *BlobController) Add(w http.ResponseWriter, r *http.Request) {
 func (c *BlobController) Get(w http.ResponseWriter, r *http.Request) {
 	id := r.FormValue("id")
 
-	doc,_ := c.Storage.Get(id)
+	doc, _ := c.Storage.Get(id)
 
 	w.Header().Set("Content-Type", doc.ContentType)
 	w.Write([]byte(doc.Content))

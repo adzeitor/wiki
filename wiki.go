@@ -8,7 +8,7 @@ type Wiki struct {
 
 type Storage interface {
 	Add(Doc) error
-	Get(string) (Doc,bool)
+	Get(string) (Doc, bool)
 }
 
 type hash string
@@ -32,22 +32,20 @@ func (wiki *Wiki) Create(name string, content string) Doc {
 }
 
 func (wiki *Wiki) Get(h string) Doc {
-	doc,_ := wiki.Storage.Get(h)
+	doc, _ := wiki.Storage.Get(h)
 
 	return doc
 }
 
 func (wiki *Wiki) GetByName(name string) Doc {
 	h := wiki.Names.GetHash(name)
-	doc,_ := wiki.Storage.Get(string(h))
+	doc, _ := wiki.Storage.Get(string(h))
 
 	return doc
 }
 
-
-
 func (wiki *Wiki) Fork(parentId string, content string) Doc {
-	parent,ok := wiki.Storage.Get(parentId)
+	parent, ok := wiki.Storage.Get(parentId)
 
 	if !ok {
 		// FIXME: return error
@@ -64,12 +62,10 @@ type DocChain struct {
 	History []Doc
 }
 
-
 func (wiki *Wiki) GetChain(parentId string) DocChain {
 	var items []Doc
 
-
-	doc,_ := wiki.Storage.Get(parentId)
+	doc, _ := wiki.Storage.Get(parentId)
 
 	id := doc.ID
 
@@ -84,9 +80,8 @@ func (wiki *Wiki) GetChain(parentId string) DocChain {
 		id = d.Parent
 	}
 
-
 	chain := DocChain{
-		Doc: doc,
+		Doc:     doc,
 		History: items,
 	}
 

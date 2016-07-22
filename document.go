@@ -14,7 +14,6 @@ type Doc struct {
 }
 
 type Document struct {
-	
 }
 
 func NewDocument(parent string, contentType string, content string) Doc {
