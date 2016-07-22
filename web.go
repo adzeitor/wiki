@@ -7,22 +7,17 @@ import (
 )
 
 type PageController struct {
-	Storage  Storage
+	Wiki     *Wiki
 	Template *template.Template
 }
 
-func NewPageController(storage Storage) (*PageController, error) {
+func NewPageController(wiki *Wiki) (*PageController, error) {
 	tmpl, err := template.ParseFiles("templates/page.html")
 
 	return &PageController{
 		Template: tmpl,
-		Storage:  storage,
+		Wiki:     wiki,
 	}, err
-}
-
-type WebWikiPage struct {
-	Doc     Doc
-	History []Doc
 }
 
 func (c *PageController) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -37,22 +32,21 @@ func (c *PageController) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (c *PageController) Show(w http.ResponseWriter, r *http.Request) {
-	id := r.FormValue("id")
-	page := WebWikiPage{
-		Doc:     c.Storage.Get(id),
-		History: c.Storage.GetChain(id),
-	}
+	hash := r.URL.Path
+
+	page := c.Wiki.GetChain(hash)
 
 	c.Template.Execute(w, page)
 }
 
 func (c *PageController) Edit(w http.ResponseWriter, r *http.Request) {
+	hash := r.URL.Path
+
 	r.ParseForm()
 
-	id := r.FormValue("id")
 	content := r.FormValue("content")
 
-	d := c.Storage.Edit(id, content)
+	d := c.Wiki.Fork(hash, content)
 
-	http.Redirect(w, r, "/page?id="+d.ID, http.StatusFound)
+	http.Redirect(w, r, "/w/"+d.ID, http.StatusFound)
 }

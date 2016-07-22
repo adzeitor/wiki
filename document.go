@@ -1,7 +1,7 @@
 package main
 
 import (
-	"crypto/sha512"
+	"crypto/sha1"
 	"encoding/hex"
 )
 
@@ -10,24 +10,15 @@ type Doc struct {
 	ID          string
 	Content     string
 	ContentType string
+	Size        int
 }
 
-type Storage interface {
-	Add(string) Doc
-	Get(string) Doc
-	Edit(string, string) Doc
-	GetChain(string) []Doc
-}
-
-type hash string
-
-type Names interface {
-	Get(string) hash
-	Link(hash, string)
+type Document struct {
+	
 }
 
 func NewDocument(parent string, contentType string, content string) Doc {
-	h := sha512.New()
+	h := sha1.New()
 
 	// FIXME: is proof of work needed here?
 	h.Write([]byte(parent))
@@ -41,5 +32,6 @@ func NewDocument(parent string, contentType string, content string) Doc {
 		ID:          hash,
 		Content:     content,
 		ContentType: contentType,
+		Size:        len(content),
 	}
 }

@@ -8,19 +8,31 @@ import (
 
 func main() {
 
-	storage := NewMemDocuments()
+	storage := NewMemoryDocuments()
+	names := NewMemoryNames()
+	wiki := &Wiki{
+		Storage: storage,
+		Names: names,
+	}
+	namesController := NewNamesController(names)
 
-	d1 := storage.Add("1. One")
-	d2 := storage.Edit(d1.ID, "2. Two ")
-	d3 := storage.Edit(d2.ID, "3. Three")
+	pages,err := NewPageController(wiki)
+	if err != nil {
+		log.Fatal(err)
+	}
 
-	pages, _ := NewPageController(storage)
-	http.Handle("/page", pages)
+	blobs := NewBlobController(storage)
 
-	blobs, _ := NewBlobController(storage)
-	http.Handle("/blob", blobs)
+	createPage, err := NewCreateController(wiki)
+	if err != nil {
+		log.Fatal(err)
+	}
 
-	fmt.Println("listen http://127.0.0.1:8080")
-	fmt.Printf("http://127.0.0.1:8080/page?id=%s\n", d3.ID)
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	http.Handle("/wiki/", http.StripPrefix("/wiki/", namesController))
+	http.Handle("/w/", http.StripPrefix("/w/", pages))
+	http.Handle("/create/", http.StripPrefix("/create/", createPage))
+	http.Handle("/raw/", http.StripPrefix("/raw/", blobs))
+
+	fmt.Println("listen http://127.0.0.1:3000")
+	log.Fatal(http.ListenAndServe(":3000", nil))
 }
